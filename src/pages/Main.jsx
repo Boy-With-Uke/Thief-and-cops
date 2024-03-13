@@ -19,16 +19,64 @@ export default function Main() {
     "",
     "",
     "",
+    "O",
     "",
-    "",
-    "",
-    "",
+    "O",
+    "O",
+    "X",
   ]);
 
+  function isValidMove(currentIndex, destinationIndex) {
+    const validMoves = [
+      [1, 2, 3], // Bouton 0
+      [16, 2, 3, 0], // Bouton 1
+      [1, 0, 8], // Bouton 2
+      [1, 0, 12], // Bouton 3
+      [17, 5, 6, 7], // Bouton 4
+      [4, 5, 6, 7], // Bouton 5
+      [4, 5, 9], // Bouton 6
+      [5, 4, 13], // Bouton 7
+      [2, 11, 10], // Bouton 8
+      [6, 11, 10], // Bouton 9
+      [11, 9, 8], // Bouton 10
+      [18, 9, 8, 10], // Bouton 11
+      [14, 15, 3], // Bouton 12
+      [14, 15, 7], // Bouton 13
+      [12, 15, 13], // Bouton 14
+      [14, 12, 13, 19], // Bouton 15
+      [1, 18, 19, 20], // Bouton 16
+      [4, 18, 19, 20], // Bouton 17
+      [11, 15, 17, 20], // Bouton 18
+      [15, 16, 17, 20], // Bouton 19
+      [18, 19, 17, 16], // Bouton 20
+    ];
+
+    const validMovesForCurrentButton = validMoves[currentIndex];
+    return validMovesForCurrentButton.includes(destinationIndex);
+  }
+
   function handleButtonClick(index) {
-    const newButtonTexts = [...buttonTexts];
-    newButtonTexts.fill("");
-    newButtonTexts[index] = "X";
+    if (buttonTexts[index] === "O") {
+      alert("Il y a déjà un policier à cet emplacement !");
+      return;
+    }
+
+    const currentIndex = buttonTexts.indexOf("X");
+    if (!isValidMove(currentIndex, index)) {
+      alert("Déplacement non autorisé !");
+      return;
+    }
+
+    const newButtonTexts = buttonTexts.map((text, i) => {
+      if (i === index) {
+        return "X";
+      } else if (text === "O") {
+        return "O";
+      } else {
+        return "";
+      }
+    });
+
     setButtonTexts(newButtonTexts);
   }
 
@@ -128,7 +176,6 @@ export default function Main() {
         <button className="btn btn-warning" id="resteButton">
           Reset
         </button>
-        <button>Relaunch</button>
       </div>
     </div>
   );
