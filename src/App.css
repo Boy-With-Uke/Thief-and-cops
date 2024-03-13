@@ -1,34 +1,142 @@
 @import url("./assets/bootstrap/css/bootstrap.min.css");
-.container{
-    background-color:red;
-    text-align: center;
+.container {
+  background-color: red;
+  text-align: center;
 }
 
-.title{
-    background-color: green;
-    padding: 10px;
+.title {
+  background-color: green;
+  padding: 10px;
 }
-.container-image{
-    background-color: aqua;
-    padding-top: 35px;
+.container-image {
+  background-color: aqua;
+  padding-top: 35px;
 }
-.container img{
-    width: 600px;
-    max-width: max-content;
-}
-
-.reset{
-    background-color: purple;
-    padding: 50px;
+.container img {
+  width: 600px;
+  max-width: max-content;
 }
 
-.reset button{
-    font-size: 1.5rem;
-    text-align: center;
+.reset {
+  background-color: purple;
+  padding: 50px;
 }
 
-button{
-    background-color: transparent !important;
-    border-radius: 50%;
+.reset button {
+  font-size: 1.5rem;
+  text-align: center;
 }
 
+.container-image button {
+  background-color: transparent !important;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  font-weight: bold;
+  font-size: 2rem;
+  position: absolute;
+  /* border: none; */
+}
+
+/* BUTTTON NORTH*/
+#northNorth {
+  top: 90px;
+  left: 917px;
+}
+#northSouth {
+  top: 166px;
+  left: 917px;
+}
+#northWest {
+  top: 106px;
+  left: 845px;
+}
+
+#northEast {
+  top: 106px;
+  left: 990px;
+}
+
+/* BUTTON SOUTH */
+#southSouth {
+  top: 597px;
+  left: 917px;
+}
+#southNorth {
+  top: 520px;
+  left: 917px;
+}
+#southEast {
+  top: 587px;
+  left: 990px;
+}
+
+#southWest {
+  top: 587px;
+  left: 845px;
+}
+
+/* BUTTON EAST */
+#eastEast {
+  top: 345px;
+  left: 1180px;
+}
+#eastWest {
+  top: 345px;
+  left: 1101px;
+}
+
+#eastNorth {
+  top: 270px;
+  left: 1165px;
+}
+
+#eastSouth {
+  top: 420px;
+  left: 1165px;
+}
+
+/* BUTTON EAST */
+#westEast {
+  top: 345px;
+  left: 651px;
+}
+#westWest {
+  top: 345px;
+  left: 724px;
+}
+
+#westNorth {
+  top: 273px;
+  left: 671px;
+}
+
+#westSouth {
+  top: 423px;
+  left: 671px;
+}
+
+/* BUTTON CENTER */
+#centerEast {
+  top: 345px;
+  left: 987px;
+}
+#centerWest {
+  top: 345px;
+  left: 841px;
+}
+
+#centerNorth {
+  top: 267px;
+  left: 916px;
+}
+
+#centerSouth {
+  top: 420px;
+  left: 916px;
+}
+
+#centerCenter {
+  top: 345px;
+  left: 916px;
+}
