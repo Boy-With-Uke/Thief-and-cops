@@ -1,84 +1,150 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import bgImage from "../assets/images/background.png";
+const initialButtonStates = [
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "O",
+  "",
+  "O",
+  "O",
+  "X",
+];
 
 export default function Main() {
-  const [buttonTexts, setButtonTexts] = useState([
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "O",
-    "",
-    "O",
-    "O",
-    "X",
-  ]);
+  const [buttonTexts, setButtonTexts] = useState(initialButtonStates);
+  const [isAITurn, setIsAITurn] = useState(false); // Variable to track if it's AI's turn
+  const [movedPoliceIndex, setMovedPoliceIndex] = useState(null); // Index of the police that has already moved
 
   function isValidMove(currentIndex, destinationIndex) {
     const validMoves = [
-      [1, 2, 3], // Bouton 0
-      [16, 2, 3, 0], // Bouton 1
-      [1, 0, 8], // Bouton 2
-      [1, 0, 12], // Bouton 3
-      [17, 5, 6, 7], // Bouton 4
-      [4, 5, 6, 7], // Bouton 5
-      [4, 5, 9], // Bouton 6
-      [5, 4, 13], // Bouton 7
-      [2, 11, 10], // Bouton 8
-      [6, 11, 10], // Bouton 9
-      [11, 9, 8], // Bouton 10
-      [18, 9, 8, 10], // Bouton 11
-      [14, 15, 3], // Bouton 12
-      [14, 15, 7], // Bouton 13
-      [12, 15, 13], // Bouton 14
-      [14, 12, 13, 19], // Bouton 15
-      [1, 18, 19, 20], // Bouton 16
-      [4, 18, 19, 20], // Bouton 17
-      [11, 15, 17, 20], // Bouton 18
-      [15, 16, 17, 20], // Bouton 19
-      [18, 19, 17, 16], // Bouton 20
+      [1, 2, 3],
+      [16, 2, 3, 0],
+      [1, 0, 8],
+      [1, 0, 12],
+      [17, 5, 6, 7],
+      [4, 5, 6, 7],
+      [4, 5, 9],
+      [5, 4, 13],
+      [2, 11, 10],
+      [6, 11, 10],
+      [11, 9, 8],
+      [18, 9, 8, 10],
+      [14, 15, 3],
+      [14, 15, 7],
+      [12, 15, 13],
+      [14, 12, 13, 19],
+      [1, 18, 19, 20],
+      [4, 18, 19, 20],
+      [11, 16, 17, 20],
+      [15, 16, 17, 20],
+      [18, 19, 17, 16],
     ];
-
-    const validMovesForCurrentButton = validMoves[currentIndex];
-    return validMovesForCurrentButton.includes(destinationIndex);
+    return validMoves[currentIndex].includes(destinationIndex);
   }
+
+  function makeAIMove() {
+    console.log("AI is making moves");
+    const currentIndex = buttonTexts.indexOf("O");
+  
+    // Skip the move if it's not AI's turn or if a police has already moved
+    if (!isAITurn || movedPoliceIndex !== null) return;
+  
+    const possibleMoves = [
+      [1, 2, 3],
+      [16, 2, 3, 0],
+      [1, 0, 8],
+      [1, 0, 12],
+      [17, 5, 6, 7],
+      [4, 5, 6, 7],
+      [4, 5, 9],
+      [5, 4, 13],
+      [2, 11, 10],
+      [6, 11, 10],
+      [11, 9, 8],
+      [18, 9, 8, 10],
+      [14, 15, 3],
+      [14, 15, 7],
+      [12, 15, 13],
+      [14, 12, 13, 19],
+      [1, 18, 19, 20],
+      [4, 18, 19, 20],
+      [11, 16, 17, 20],
+      [15, 16, 17, 20],
+      [18, 19, 17, 16],
+    ];
+  
+    // Filter possible moves based on current position
+    const validMoves = possibleMoves[currentIndex].filter(
+      (destinationIndex) => buttonTexts[destinationIndex] === ""
+    );
+  
+    // Choose a random valid move
+    const randomIndex = Math.floor(Math.random() * validMoves.length);
+    const destinationIndex = validMoves[randomIndex];
+  
+    // Update button states
+    const newButtonTexts = buttonTexts.map((text, i) =>
+      i === destinationIndex ? "O" : i === currentIndex ? "" : text
+    );
+  
+    setButtonTexts(newButtonTexts);
+    setIsAITurn(false); // Set AI's turn to false after moving
+    setMovedPoliceIndex(null); // Reset moved police index
+  }
+  
 
   function handleButtonClick(index) {
     if (buttonTexts[index] === "O") {
       alert("Il y a déjà un policier à cet emplacement !");
       return;
     }
-
+  
     const currentIndex = buttonTexts.indexOf("X");
     if (!isValidMove(currentIndex, index)) {
       alert("Déplacement non autorisé !");
       return;
     }
-
+  
     const newButtonTexts = buttonTexts.map((text, i) => {
       if (i === index) {
         return "X";
-      } else if (text === "O") {
-        return "O";
-      } else {
+      } else if (i === currentIndex) {
         return "";
       }
+      return text;
     });
-
+  
     setButtonTexts(newButtonTexts);
+    setIsAITurn(true); // Set AI's turn to true after player's move
   }
+  
+  useEffect(() => {
+    if (isAITurn) {
+      makeAIMove();
+    }
+  }, [buttonTexts, isAITurn]);
+
+
+
+
+  function resetGame(){
+    window.location.reload();
+  }
+
 
   return (
     <div className="container">
@@ -173,7 +239,7 @@ export default function Main() {
       </div>
 
       <div className="reset">
-        <button className="btn btn-warning" id="resteButton">
+        <button className="btn btn-warning" id="resteButton" onClick={resetGame}>
           Reset
         </button>
       </div>

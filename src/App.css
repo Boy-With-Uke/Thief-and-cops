@@ -36,6 +36,7 @@
   font-weight: bold;
   font-size: 2rem;
   position: absolute;
+  color: hsl(0, 0%, 26%) !important;
   border: none;
 }
 
