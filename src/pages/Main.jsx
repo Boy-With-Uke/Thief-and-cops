@@ -107,30 +107,57 @@ export default function Main() {
   }
   
 
-  function handleButtonClick(index) {
-    if (buttonTexts[index] === "O") {
-      alert("Il y a déjà un policier à cet emplacement !");
-      return;
-    }
-  
-    const currentIndex = buttonTexts.indexOf("X");
-    if (!isValidMove(currentIndex, index)) {
-      alert("Déplacement non autorisé !");
-      return;
-    }
-  
-    const newButtonTexts = buttonTexts.map((text, i) => {
-      if (i === index) {
-        return "X";
-      } else if (i === currentIndex) {
-        return "";
-      }
-      return text;
-    });
-  
-    setButtonTexts(newButtonTexts);
-    setIsAITurn(true); // Set AI's turn to true after player's move
+function handleButtonClick(index) {
+  const currentIndex = buttonTexts.indexOf("X");
+  if (!isValidMove(currentIndex, index)) {
+    alert("Déplacement non autorisé !");
+    return;
   }
+
+  // Vérifier les conditions de capture
+  const captureConditions = [
+    [0, [1, 2, 3]],
+    [3, [1, 0, 12]],
+    [2, [1, 0, 8]],
+    [14, [15, 13, 12]],
+    [12, [15, 3, 14]],
+    [13, [15, 7, 14]],
+    [10, [8, 9, 11]],
+    [8, [11, 10, 2]],
+    [9, [11, 6, 10]],
+    [5, [7, 4, 6]],
+    [7, [5, 4, 13]],
+    [6, [5, 4, 9]],
+  ];
+
+  for (const [playerIndex, policeIndices] of captureConditions) {
+    if (index === playerIndex && policeIndices.every(policeIndex => buttonTexts[policeIndex] === "O")) {
+      alert("Le joueur X a été capturé par les policiers !");
+      resetGame();
+      return;
+    }
+  }
+
+  // Vérifier la condition de victoire du joueur
+  if (index === 20) {
+    alert("Le joueur X a gagné !");
+    resetGame();
+    return;
+  }
+
+  const newButtonTexts = buttonTexts.map((text, i) => {
+    if (i === index) {
+      return "X";
+    } else if (i === currentIndex) {
+      return "";
+    }
+    return text;
+  });
+
+  setButtonTexts(newButtonTexts);
+  setIsAITurn(true); // Set AI's turn to true after player's move
+}
+
   
   useEffect(() => {
     if (isAITurn) {
