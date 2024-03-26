@@ -59,10 +59,10 @@ export default function Main() {
   function makeAIMove() {
     console.log("AI is making moves");
     const currentIndex = buttonTexts.indexOf("O");
-  
+
     // Skip the move if it's not AI's turn or if a police has already moved
     if (!isAITurn || movedPoliceIndex !== null) return;
-  
+
     const possibleMoves = [
       [1, 2, 3],
       [16, 2, 3, 0],
@@ -86,92 +86,101 @@ export default function Main() {
       [15, 16, 17, 20],
       [18, 19, 17, 16],
     ];
-  
+
     // Filter possible moves based on current position
     const validMoves = possibleMoves[currentIndex].filter(
       (destinationIndex) => buttonTexts[destinationIndex] === ""
     );
-  
+
     // Choose a random valid move
     const randomIndex = Math.floor(Math.random() * validMoves.length);
     const destinationIndex = validMoves[randomIndex];
-  
+
     // Update button states
     const newButtonTexts = buttonTexts.map((text, i) =>
       i === destinationIndex ? "O" : i === currentIndex ? "" : text
     );
-  
+
     setButtonTexts(newButtonTexts);
     setIsAITurn(false); // Set AI's turn to false after moving
     setMovedPoliceIndex(null); // Reset moved police index
   }
-  
 
-function handleButtonClick(index) {
-  const currentIndex = buttonTexts.indexOf("X");
-  if (!isValidMove(currentIndex, index)) {
-    alert("Déplacement non autorisé !");
-    return;
+  function handleButtonClick(index) {
+    if (buttonTexts[index] === "O") {
+      alert("Il y a déjà un policier à cet emplacement !");
+      return;
+    }
+
+    const currentIndex = buttonTexts.indexOf("X");
+    if (!isValidMove(currentIndex, index)) {
+      alert("Déplacement non autorisé !");
+      return;
+    }
+
+    const newButtonTexts = buttonTexts.map((text, i) => {
+      if (i === index) {
+        return "X";
+      } else if (i === currentIndex) {
+        return "";
+      }
+      return text;
+    });
+
+    setButtonTexts(newButtonTexts);
+    setIsAITurn(true); // Set AI's turn to true after player's move
+
+    // Vérifier les conditions de victoire du joueur après le mouvement
+    checkWinCondition(newButtonTexts);
   }
 
-  // Vérifier les conditions de capture
-  const captureConditions = [
-    [0, [1, 2, 3]],
-    [3, [1, 0, 12]],
-    [2, [1, 0, 8]],
-    [14, [15, 13, 12]],
-    [12, [15, 3, 14]],
-    [13, [15, 7, 14]],
-    [10, [8, 9, 11]],
-    [8, [11, 10, 2]],
-    [9, [11, 6, 10]],
-    [5, [7, 4, 6]],
-    [7, [5, 4, 13]],
-    [6, [5, 4, 9]],
-  ];
+  function checkWinCondition(newButtonTexts) {
+    // Vérifier les conditions de capture
+    const captureConditions = [
+      [0, [1, 2, 3]],
+      [3, [1, 0, 12]],
+      [2, [1, 0, 8]],
+      [14, [15, 13, 12]],
+      [12, [15, 3, 14]],
+      [13, [15, 7, 14]],
+      [10, [8, 9, 11]],
+      [8, [11, 10, 2]],
+      [9, [11, 6, 10]],
+      [5, [7, 4, 6]],
+      [7, [5, 4, 13]],
+      [6, [5, 4, 9]],
+    ];
 
-  for (const [playerIndex, policeIndices] of captureConditions) {
-    if (index === playerIndex && policeIndices.every(policeIndex => buttonTexts[policeIndex] === "O")) {
-      alert("Le joueur X a été capturé par les policiers !");
+    for (const [playerIndex, policeIndices] of captureConditions) {
+      if (
+        newButtonTexts[playerIndex] === "X" &&
+        policeIndices.every(
+          (policeIndex) => newButtonTexts[policeIndex] === "O"
+        )
+      ) {
+        alert("Le joueur X a été capturé par les policiers !");
+        resetGame();
+        return;
+      }
+    }
+
+    // Vérifier la condition de victoire du joueur
+    if (newButtonTexts[20] === "X") {
+      alert("Le joueur X a gagné !");
       resetGame();
       return;
     }
   }
 
-  // Vérifier la condition de victoire du joueur
-  if (index === 20) {
-    alert("Le joueur X a gagné !");
-    resetGame();
-    return;
-  }
-
-  const newButtonTexts = buttonTexts.map((text, i) => {
-    if (i === index) {
-      return "X";
-    } else if (i === currentIndex) {
-      return "";
-    }
-    return text;
-  });
-
-  setButtonTexts(newButtonTexts);
-  setIsAITurn(true); // Set AI's turn to true after player's move
-}
-
-  
   useEffect(() => {
     if (isAITurn) {
       makeAIMove();
     }
   }, [buttonTexts, isAITurn]);
 
-
-
-
-  function resetGame(){
+  function resetGame() {
     window.location.reload();
   }
-
 
   return (
     <div className="container">
@@ -266,7 +275,11 @@ function handleButtonClick(index) {
       </div>
 
       <div className="reset">
-        <button className="btn btn-warning" id="resteButton" onClick={resetGame}>
+        <button
+          className="btn btn-warning"
+          id="resteButton"
+          onClick={resetGame}
+        >
           Reset
         </button>
       </div>

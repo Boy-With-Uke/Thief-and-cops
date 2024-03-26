@@ -43,102 +43,102 @@
 /* BUTTTON NORTH*/
 #northNorth {
   top: 90px;
-  left: 917px;
+  left: 935px;
 }
 #northSouth {
   top: 166px;
-  left: 917px;
+  left: 935px;
 }
 #northWest {
   top: 106px;
-  left: 845px;
+  left: 863px;
 }
 
 #northEast {
   top: 106px;
-  left: 990px;
+  left: 1008px;
 }
 
 /* BUTTON SOUTH */
 #southSouth {
   top: 597px;
-  left: 917px;
+  left: 935px;
 }
 #southNorth {
   top: 520px;
-  left: 917px;
+  left: 935px;
 }
 #southEast {
   top: 587px;
-  left: 990px;
+  left: 1008px;
 }
 
 #southWest {
   top: 587px;
-  left: 845px;
+  left: 863px;
 }
 
 /* BUTTON EAST */
 #eastEast {
   top: 345px;
-  left: 1180px;
+  left: 1198px;
 }
 #eastWest {
   top: 345px;
-  left: 1101px;
+  left: 1119px;
 }
 
 #eastNorth {
   top: 270px;
-  left: 1165px;
+  left: 1183px;
 }
 
 #eastSouth {
   top: 420px;
-  left: 1165px;
+  left: 1183px;
 }
 
-/* BUTTON EAST */
+/* BUTTON WEST */
 #westEast {
   top: 345px;
-  left: 651px;
+  left: 669px;
 }
 #westWest {
   top: 345px;
-  left: 724px;
+  left: 742px;
 }
 
 #westNorth {
   top: 273px;
-  left: 671px;
+  left: 689px;
 }
 
 #westSouth {
   top: 423px;
-  left: 671px;
+  left: 689px;
 }
 
 /* BUTTON CENTER */
 #centerEast {
   top: 345px;
-  left: 987px;
+  left: 1005px;
 }
 #centerWest {
   top: 345px;
-  left: 841px;
+  left: 859px;
 }
 
 #centerNorth {
   top: 267px;
-  left: 916px;
+  left: 934px;
 }
 
 #centerSouth {
   top: 420px;
-  left: 916px;
+  left: 934px;
 }
 
 #centerCenter {
   top: 345px;
-  left: 916px;
+  left: 934px;
 }
