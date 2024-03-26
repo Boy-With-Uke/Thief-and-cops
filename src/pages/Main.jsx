@@ -17,11 +17,11 @@ const initialButtonStates = [
   "",
   "",
   "",
-  "O",
+  "👮",
   "",
-  "O",
-  "O",
-  "X",
+  "👮",
+  "👮",
+  "🥷",
 ];
 
 export default function Main() {
@@ -58,7 +58,7 @@ export default function Main() {
 
   function makeAIMove() {
     console.log("AI is making moves");
-    const currentIndex = buttonTexts.indexOf("O");
+    const currentIndex = buttonTexts.indexOf("👮");
 
     // Skip the move if it's not AI's turn or if a police has already moved
     if (!isAITurn || movedPoliceIndex !== null) return;
@@ -98,7 +98,7 @@ export default function Main() {
 
     // Update button states
     const newButtonTexts = buttonTexts.map((text, i) =>
-      i === destinationIndex ? "O" : i === currentIndex ? "" : text
+      i === destinationIndex ? "👮" : i === currentIndex ? "" : text
     );
 
     setButtonTexts(newButtonTexts);
@@ -107,20 +107,19 @@ export default function Main() {
   }
 
   function handleButtonClick(index) {
-    if (buttonTexts[index] === "O") {
-      alert("Il y a déjà un policier à cet emplacement !");
-      return;
-    }
-
-    const currentIndex = buttonTexts.indexOf("X");
+    const currentIndex = buttonTexts.indexOf("🥷");
     if (!isValidMove(currentIndex, index)) {
       alert("Déplacement non autorisé !");
+      return;
+    }
+    if (buttonTexts[index] === "👮") {
+      alert("Il y a déjà un policier à cet emplacement !");
       return;
     }
 
     const newButtonTexts = buttonTexts.map((text, i) => {
       if (i === index) {
-        return "X";
+        return "🥷";
       } else if (i === currentIndex) {
         return "";
       }
@@ -153,20 +152,20 @@ export default function Main() {
 
     for (const [playerIndex, policeIndices] of captureConditions) {
       if (
-        newButtonTexts[playerIndex] === "X" &&
+        newButtonTexts[playerIndex] === "🥷" &&
         policeIndices.every(
-          (policeIndex) => newButtonTexts[policeIndex] === "O"
+          (policeIndex) => newButtonTexts[policeIndex] === "👮"
         )
       ) {
-        alert("Le joueur X a été capturé par les policiers !");
+        alert("Le joueur 🥷 a été capturé par les policiers !");
         resetGame();
         return;
       }
     }
 
     // Vérifier la condition de victoire du joueur
-    if (newButtonTexts[20] === "X") {
-      alert("Le joueur X a gagné !");
+    if (newButtonTexts[20] === "🥷") {
+      alert("Le joueur 🥷 a gagné !");
       resetGame();
       return;
     }
