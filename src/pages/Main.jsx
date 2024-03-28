@@ -23,6 +23,43 @@ const initialButtonStates = [
   "👮",
   "🥷",
 ];
+const captureConditions = [
+  [0, [1, 2, 3]],
+  [3, [1, 0, 12]],
+  [2, [1, 0, 8]],
+  [14, [15, 13, 12]],
+  [12, [15, 3, 14]],
+  [13, [15, 7, 14]],
+  [10, [8, 9, 11]],
+  [8, [11, 10, 2]],
+  [9, [11, 6, 10]],
+  [5, [7, 4, 6]],
+  [7, [5, 4, 13]],
+  [6, [5, 4, 9]],
+];
+const possibleMoves = [
+  [1, 2, 3],
+  [16, 2, 3, 0],
+  [1, 0, 8],
+  [1, 0, 12],
+  [17, 5, 6, 7],
+  [4, 5, 6, 7],
+  [4, 5, 9],
+  [5, 4, 13],
+  [2, 11, 10],
+  [6, 11, 10],
+  [11, 9, 8],
+  [18, 9, 8, 10],
+  [14, 15, 3],
+  [14, 15, 7],
+  [12, 15, 13],
+  [14, 12, 13, 19],
+  [1, 18, 19, 20],
+  [4, 18, 19, 20],
+  [11, 16, 17, 20],
+  [15, 16, 17, 20],
+  [18, 19, 17, 16],
+];
 
 export default function Main() {
   const [buttonTexts, setButtonTexts] = useState(initialButtonStates);
@@ -30,30 +67,7 @@ export default function Main() {
   const [movedPoliceIndex, setMovedPoliceIndex] = useState(null); // Index of the police that has already moved
 
   function isValidMove(currentIndex, destinationIndex) {
-    const validMoves = [
-      [1, 2, 3],
-      [16, 2, 3, 0],
-      [1, 0, 8],
-      [1, 0, 12],
-      [17, 5, 6, 7],
-      [4, 5, 6, 7],
-      [4, 5, 9],
-      [5, 4, 13],
-      [2, 11, 10],
-      [6, 11, 10],
-      [11, 9, 8],
-      [18, 9, 8, 10],
-      [14, 15, 3],
-      [14, 15, 7],
-      [12, 15, 13],
-      [14, 12, 13, 19],
-      [1, 18, 19, 20],
-      [4, 18, 19, 20],
-      [11, 16, 17, 20],
-      [15, 16, 17, 20],
-      [18, 19, 17, 16],
-    ];
-    return validMoves[currentIndex].includes(destinationIndex);
+    return possibleMoves[currentIndex].includes(destinationIndex);
   }
 
   function makeAIMove() {
@@ -62,30 +76,6 @@ export default function Main() {
 
     // Skip the move if it's not AI's turn or if a police has already moved
     if (!isAITurn || movedPoliceIndex !== null) return;
-
-    const possibleMoves = [
-      [1, 2, 3],
-      [16, 2, 3, 0],
-      [1, 0, 8],
-      [1, 0, 12],
-      [17, 5, 6, 7],
-      [4, 5, 6, 7],
-      [4, 5, 9],
-      [5, 4, 13],
-      [2, 11, 10],
-      [6, 11, 10],
-      [11, 9, 8],
-      [18, 9, 8, 10],
-      [14, 15, 3],
-      [14, 15, 7],
-      [12, 15, 13],
-      [14, 12, 13, 19],
-      [1, 18, 19, 20],
-      [4, 18, 19, 20],
-      [11, 16, 17, 20],
-      [15, 16, 17, 20],
-      [18, 19, 17, 16],
-    ];
 
     // Filter possible moves based on current position
     const validMoves = possibleMoves[currentIndex].filter(
@@ -135,20 +125,6 @@ export default function Main() {
 
   function checkWinCondition(newButtonTexts) {
     // Vérifier les conditions de capture
-    const captureConditions = [
-      [0, [1, 2, 3]],
-      [3, [1, 0, 12]],
-      [2, [1, 0, 8]],
-      [14, [15, 13, 12]],
-      [12, [15, 3, 14]],
-      [13, [15, 7, 14]],
-      [10, [8, 9, 11]],
-      [8, [11, 10, 2]],
-      [9, [11, 6, 10]],
-      [5, [7, 4, 6]],
-      [7, [5, 4, 13]],
-      [6, [5, 4, 9]],
-    ];
 
     for (const [playerIndex, policeIndices] of captureConditions) {
       if (
