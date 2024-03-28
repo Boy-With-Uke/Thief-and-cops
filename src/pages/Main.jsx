@@ -72,25 +72,57 @@ export default function Main() {
 
   function makeAIMove() {
     console.log("AI is making moves");
-    const currentIndex = buttonTexts.indexOf("👮");
+    const thiefIndex = buttonTexts.indexOf("🥷");
+    const policeIndices = buttonTexts.reduce((acc, cur, idx) => {
+      if (cur === "👮") acc.push(idx);
+      return acc;
+    }, []);
 
     // Skip the move if it's not AI's turn or if a police has already moved
     if (!isAITurn || movedPoliceIndex !== null) return;
 
-    // Filter possible moves based on current position
-    const validMoves = possibleMoves[currentIndex].filter(
-      (destinationIndex) => buttonTexts[destinationIndex] === ""
-    );
+    let bestMove = null;
+    let bestScore = -Infinity;
+    let newButtonTexts = null;
 
-    // Choose a random valid move
-    const randomIndex = Math.floor(Math.random() * validMoves.length);
-    const destinationIndex = validMoves[randomIndex];
+    // Evaluate each possible move for each police
+    policeIndices.forEach((policeIndex) => {
+      possibleMoves[policeIndex].forEach((destinationIndex) => {
+        // Check if the destination is empty
+        if (buttonTexts[destinationIndex] === "") {
+          // Calculate the score for this move based on capture conditions and distance
+          let score = 0;
+          let captureCount = 0;
+          captureConditions.forEach(([playerIndex, captureIndices]) => {
+            if (
+              buttonTexts[playerIndex] === "🥷" &&
+              captureIndices.every((index) => buttonTexts[index] === "👮")
+            ) {
+              score += 100; // Add a large score bonus for capturing the thief
+              captureCount++;
+            }
+          });
 
-    // Update button states
-    const newButtonTexts = buttonTexts.map((text, i) =>
-      i === destinationIndex ? "👮" : i === currentIndex ? "" : text
-    );
+          const thiefDistance = Math.abs(thiefIndex - destinationIndex);
+          const policeDistance = Math.abs(policeIndex - destinationIndex);
+          const distanceScore = 1 - (thiefDistance + policeDistance) / 40; // Normalize the distance score between 0 and 1
+          score += distanceScore * 50; // Add a medium score bonus for moving closer to the thief
 
+          // Update the best move if this move has a higher score
+          if (score > bestScore) {
+            bestMove = destinationIndex;
+            bestScore = score;
+
+            // Update newButtonTexts here
+            newButtonTexts = buttonTexts.map((text, i) =>
+              i === bestMove ? "👮" : i === policeIndex ? "" : text
+            );
+          }
+        }
+      });
+    });
+
+    // Set button states with the best move
     setButtonTexts(newButtonTexts);
     setIsAITurn(false); // Set AI's turn to false after moving
     setMovedPoliceIndex(null); // Reset moved police index
