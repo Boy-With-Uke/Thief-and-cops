@@ -104,28 +104,64 @@ export default function Main() {
 
       bestMove = 20;
     } else {
-      // Evaluate each possible move for each police
-      policeIndices.forEach((policeIndex) => {
-        possibleMoves[policeIndex].forEach((destinationIndex) => {
-          // Check if the destination is empty
-          if (buttonTexts[destinationIndex] === "") {
-            // Check if the destination is where the thief is
-            if (destinationIndex === thiefIndex) {
-              // Capture the thief
-              newButtonTexts = buttonTexts.map((text, i) =>
-                i === destinationIndex ? "👮" : i === policeIndex ? "" : text
-              );
-              bestMove = destinationIndex;
-            } else {
-              // Move the police closer to the thief
-              newButtonTexts = buttonTexts.map((text, i) =>
-                i === destinationIndex ? "👮" : i === policeIndex ? "" : text
-              );
-              bestMove = destinationIndex;
-            }
-          }
-        });
+      // Find the capture condition that is closest to the thief's position
+      let closestCaptureCondition = null;
+      let minDistance = Infinity;
+      captureConditions.forEach((condition) => {
+        const [thiefPosition, policePositions] = condition;
+        const distance = Math.abs(thiefIndex - thiefPosition);
+        if (distance < minDistance) {
+          closestCaptureCondition = condition;
+          minDistance = distance;
+        }
       });
+
+      // Check if there is a police that can move to complete the capture condition
+      if (closestCaptureCondition !== null) {
+        const [thiefPosition, policePositions] = closestCaptureCondition;
+        const policeThatCanMove = policeIndices.find((index) => {
+          return (
+            possibleMoves[index].includes(policePositions[0]) &&
+            buttonTexts[policePositions[0]] === ""
+          );
+        });
+
+        if (policeThatCanMove !== undefined) {
+          // Move the police to the position that completes the capture condition
+          newButtonTexts = buttonTexts.map((text, i) =>
+            i === policePositions[0]
+              ? "👮"
+              : i === policeThatCanMove
+              ? ""
+              : text
+          );
+
+          bestMove = policePositions[0];
+        } else {
+          // Move a random police closer to the thief
+          const policeThatCanMove =
+            policeIndices[Math.floor(Math.random() * policeIndices.length)];
+          const possibleMovesForPolice = possibleMoves[policeThatCanMove];
+          const destinationIndex = possibleMovesForPolice.find(
+            (index) =>
+              buttonTexts[index] === "" &&
+              Math.abs(index - thiefIndex) <
+                Math.abs(policeThatCanMove - thiefIndex)
+          );
+
+          if (destinationIndex !== undefined) {
+            newButtonTexts = buttonTexts.map((text, i) =>
+              i === destinationIndex
+                ? "👮"
+                : i === policeThatCanMove
+                ? ""
+                : text
+            );
+
+            bestMove = destinationIndex;
+          }
+        }
+      }
     }
 
     // Set button states with the best move
@@ -133,7 +169,6 @@ export default function Main() {
     setIsAITurn(false); // Set AI's turn to false after moving
     setMovedPoliceIndex(null); // Reset moved police index
   }
-
   function handleButtonClick(index) {
     const currentIndex = buttonTexts.indexOf("🥷");
     if (!isValidMove(currentIndex, index)) {
