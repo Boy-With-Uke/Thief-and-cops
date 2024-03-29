@@ -82,45 +82,51 @@ export default function Main() {
     if (!isAITurn || movedPoliceIndex !== null) return;
 
     let bestMove = null;
-    let bestScore = -Infinity;
     let newButtonTexts = null;
 
-    // Evaluate each possible move for each police
-    policeIndices.forEach((policeIndex) => {
-      possibleMoves[policeIndex].forEach((destinationIndex) => {
-        // Check if the destination is empty
-        if (buttonTexts[destinationIndex] === "") {
-          // Calculate the score for this move based on capture conditions and distance
-          let score = 0;
-          let captureCount = 0;
-          captureConditions.forEach(([playerIndex, captureIndices]) => {
-            if (
-              buttonTexts[playerIndex] === "🥷" &&
-              captureIndices.every((index) => buttonTexts[index] === "👮")
-            ) {
-              score += 100; // Add a large score bonus for capturing the thief
-              captureCount++;
-            }
-          });
-
-          const thiefDistance = Math.abs(thiefIndex - destinationIndex);
-          const policeDistance = Math.abs(policeIndex - destinationIndex);
-          const distanceScore = 1 - (thiefDistance + policeDistance) / 40; // Normalize the distance score between 0 and 1
-          score += distanceScore * 50; // Add a medium score bonus for moving closer to the thief
-
-          // Update the best move if this move has a higher score
-          if (score > bestScore) {
-            bestMove = destinationIndex;
-            bestScore = score;
-
-            // Update newButtonTexts here
-            newButtonTexts = buttonTexts.map((text, i) =>
-              i === bestMove ? "👮" : i === policeIndex ? "" : text
-            );
-          }
+    // If the thief is close to the victory position, protect it
+    if ([16, 17, 18, 19].includes(thiefIndex)) {
+      // Find the police that is closest to the victory position
+      let closestPoliceIndex = null;
+      let minDistance = Infinity;
+      policeIndices.forEach((policeIndex) => {
+        const distance = Math.abs(policeIndex - 20);
+        if (distance < minDistance) {
+          closestPoliceIndex = policeIndex;
+          minDistance = distance;
         }
       });
-    });
+
+      // Move the closest police to the victory position
+      newButtonTexts = buttonTexts.map((text, i) =>
+        i === 20 ? "👮" : i === closestPoliceIndex ? "" : text
+      );
+
+      bestMove = 20;
+    } else {
+      // Evaluate each possible move for each police
+      policeIndices.forEach((policeIndex) => {
+        possibleMoves[policeIndex].forEach((destinationIndex) => {
+          // Check if the destination is empty
+          if (buttonTexts[destinationIndex] === "") {
+            // Check if the destination is where the thief is
+            if (destinationIndex === thiefIndex) {
+              // Capture the thief
+              newButtonTexts = buttonTexts.map((text, i) =>
+                i === destinationIndex ? "👮" : i === policeIndex ? "" : text
+              );
+              bestMove = destinationIndex;
+            } else {
+              // Move the police closer to the thief
+              newButtonTexts = buttonTexts.map((text, i) =>
+                i === destinationIndex ? "👮" : i === policeIndex ? "" : text
+              );
+              bestMove = destinationIndex;
+            }
+          }
+        });
+      });
+    }
 
     // Set button states with the best move
     setButtonTexts(newButtonTexts);
