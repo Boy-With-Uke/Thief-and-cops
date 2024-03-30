@@ -1,28 +1,8 @@
 import { useState, useEffect } from "react";
 import bgImage from "../assets/images/background.png";
-const initialButtonStates = [
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "👮",
-  "",
-  "👮",
-  "👮",
-  "🥷",
-];
+import Modal from "react-bootstrap/Modal";
+
+import Button from "react-bootstrap/Button";
 const captureConditions = [
   [0, [1, 2, 3]],
   [3, [1, 0, 12]],
@@ -62,9 +42,37 @@ const possibleMoves = [
 ];
 
 export default function Main() {
-  const [buttonTexts, setButtonTexts] = useState(initialButtonStates);
   const [isAITurn, setIsAITurn] = useState(false); // Variable to track if it's AI's turn
   const [movedPoliceIndex, setMovedPoliceIndex] = useState(null); // Index of the police that has already moved
+
+  const [initialButtonStates, setInitialButtonStates] = useState([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "👮",
+    "",
+    "👮",
+    "👮",
+    "🥷",
+  ]);
+  const [buttonTexts, setButtonTexts] = useState(initialButtonStates);
+
+  const [showModal, setShowModal] = useState(false);
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
 
   function isValidMove(currentIndex, destinationIndex) {
     return possibleMoves[currentIndex].includes(destinationIndex);
@@ -169,6 +177,35 @@ export default function Main() {
     setIsAITurn(false); // Set AI's turn to false after moving
     setMovedPoliceIndex(null); // Reset moved police index
   }
+
+
+
+  function handleSavePositions() {
+    const cop1Pos = parseInt(document.getElementById("cops_1").value);
+    const cop2Pos = parseInt(document.getElementById("cops_2").value);
+    const cop3Pos = parseInt(document.getElementById("cops_3").value);
+    const thiefPos = parseInt(document.getElementById("thief").value);
+    
+    const newButtonStates = [];
+    for (let i = 0; i < initialButtonStates.length; i++) {
+      if (i === cop1Pos) {
+        newButtonStates[i] = "👮";
+      } else if (i === cop2Pos) {
+        newButtonStates[i] = "👮";
+      } else if (i === cop3Pos) {
+        newButtonStates[i] = "👮";
+      } else if (i === thiefPos) {
+        newButtonStates[i] = "🥷";
+      } else {
+        newButtonStates[i] = "";
+      }
+    }
+    setInitialButtonStates(newButtonStates);
+    setButtonTexts(newButtonStates);
+    handleCloseModal();
+  }
+
+
   function handleButtonClick(index) {
     const currentIndex = buttonTexts.indexOf("🥷");
     if (!isValidMove(currentIndex, index)) {
@@ -232,6 +269,34 @@ export default function Main() {
 
   return (
     <div className="container">
+      <Modal show={showModal} onHide={handleCloseModal} style={{ marginTop: "100px" }}>
+        <Modal.Header closeButton>
+          <Modal.Title>Selectionner les nouveaux positions</Modal.Title>
+        </Modal.Header>
+        <Modal.Body
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div class="input-div">
+            <label htmlFor="cops_1" style={{gap: '20px'}}>👮 (1) </label><input type="number" id="cops_1"/>
+            <br />
+            <br />
+            <label htmlFor="cops_2" style={{gap: '20px'}}>👮 (3) </label><input type="number" id="cops_2"/>
+            <br />
+            <br />
+            <label htmlFor="cops_3" style={{gap: '20px'}}>👮 (2) </label><input type="number" id="cops_3"/>
+            <br />
+            <br />
+            <label htmlFor="thief" style={{gap: '20px'}}>🥷 (0)</label><input type="number" id="thief"/>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleSavePositions}>Enregistrer</Button>
+        </Modal.Footer>
+      </Modal>
       <div className="title">
         <h1>Welcome to the Thief Game</h1>
       </div>
@@ -329,6 +394,15 @@ export default function Main() {
           onClick={resetGame}
         >
           Reset
+        </button>
+        <button
+          className="btn btn-warning"
+          id="resteButton"
+          onClick={() => {
+            handleShowModal();
+          }}
+        >
+          SetPosition
         </button>
       </div>
     </div>
