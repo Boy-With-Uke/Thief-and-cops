@@ -178,14 +178,12 @@ export default function Main() {
     setMovedPoliceIndex(null); // Reset moved police index
   }
 
-
-
   function handleSavePositions() {
     const cop1Pos = parseInt(document.getElementById("cops_1").value);
     const cop2Pos = parseInt(document.getElementById("cops_2").value);
     const cop3Pos = parseInt(document.getElementById("cops_3").value);
     const thiefPos = parseInt(document.getElementById("thief").value);
-    
+
     const newButtonStates = [];
     for (let i = 0; i < initialButtonStates.length; i++) {
       if (i === cop1Pos) {
@@ -204,7 +202,6 @@ export default function Main() {
     setButtonTexts(newButtonStates);
     handleCloseModal();
   }
-
 
   function handleButtonClick(index) {
     const currentIndex = buttonTexts.indexOf("🥷");
@@ -269,7 +266,11 @@ export default function Main() {
 
   return (
     <div className="container">
-      <Modal show={showModal} onHide={handleCloseModal} style={{ marginTop: "100px" }}>
+      <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        style={{ marginTop: "100px" }}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Selectionner les nouveaux positions</Modal.Title>
         </Modal.Header>
@@ -281,24 +282,38 @@ export default function Main() {
           }}
         >
           <div class="input-div">
-            <label htmlFor="cops_1" style={{gap: '20px'}}>👮 (1) </label><input type="number" id="cops_1"/>
+            <label htmlFor="cops_1" style={{ gap: "20px" }}>
+              👮 (1){" "}
+            </label>
+            <input type="number" id="cops_1" />
             <br />
             <br />
-            <label htmlFor="cops_2" style={{gap: '20px'}}>👮 (3) </label><input type="number" id="cops_2"/>
+            <label htmlFor="cops_2" style={{ gap: "20px" }}>
+              👮 (3){" "}
+            </label>
+            <input type="number" id="cops_2" />
             <br />
             <br />
-            <label htmlFor="cops_3" style={{gap: '20px'}}>👮 (2) </label><input type="number" id="cops_3"/>
+            <label htmlFor="cops_3" style={{ gap: "20px" }}>
+              👮 (2){" "}
+            </label>
+            <input type="number" id="cops_3" />
             <br />
             <br />
-            <label htmlFor="thief" style={{gap: '20px'}}>🥷 (0)</label><input type="number" id="thief"/>
+            <label htmlFor="thief" style={{ gap: "20px" }}>
+              🥷 (0)
+            </label>
+            <input type="number" id="thief" />
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="success" onClick={handleSavePositions}>Enregistrer</Button>
+          <Button className="btn" style={{backgroundColor: '#8D2EB2'}} onClick={handleSavePositions}>
+            Enregistrer
+          </Button>
         </Modal.Footer>
       </Modal>
       <div className="title">
-        <h1>Welcome to the Thief Game</h1>
+        <h1 className="gradient-text">Welcome to the Thief Game</h1>
       </div>
 
       <div className="container-image">
@@ -389,18 +404,20 @@ export default function Main() {
 
       <div className="reset">
         <button
-          className="btn btn-warning"
+          className="btn"
           id="resteButton"
           onClick={resetGame}
+          style={{ gap: "20px", backgroundColor: "#8D2EB2", marginRight: "20px" }}
         >
           Reset
         </button>
         <button
-          className="btn btn-warning"
+          className="btn"
           id="resteButton"
           onClick={() => {
             handleShowModal();
           }}
+          style={{ gap: "20px", backgroundColor: "#8D2EB2" }}
         >
           SetPosition
         </button>

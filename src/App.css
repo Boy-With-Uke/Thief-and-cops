@@ -1,15 +1,12 @@
 @import url("./assets/bootstrap/css/bootstrap.min.css");
 .container {
-  background-color: red;
   text-align: center;
 }
 
 .title {
-  background-color: green;
   padding: 10px;
 }
 .container-image {
-  background-color: aqua;
   padding-top: 35px;
 }
 .container img {
@@ -19,7 +16,6 @@
 }
 
 .reset {
-  background-color: purple;
   padding: 50px;
 }
 
@@ -141,4 +137,11 @@
 #centerCenter {
   top: 345px;
   left: 934px;
+}
+
+
+.gradient-text {
+  background-image: linear-gradient(to right, blue 0%, #8D2EB2 50%, red 100%);
+  -webkit-background-clip: text;
+  color: transparent;
 }
